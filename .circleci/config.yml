@@ -16,4 +16,4 @@ jobs:
 
       - run:
          name: Connect to the DB
-         command: psql postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@127.0.0.1/pguser -c select 1;
+         command: psql postgresql://pguser:pgpass@127.0.0.1/pguser -c select 1;
