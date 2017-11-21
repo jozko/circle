@@ -18,7 +18,7 @@ jobs:
           name: Start Pg container
           command: |
             docker run -d \
-              -p 0.0.0.0:5432:5432 \
+              -p 5432:5432 \
               -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
               -e POSTGRES_USER=$POSTGRES_USER \
               --name db $POSTGRES_IMAGE
