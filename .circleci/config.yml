@@ -1,12 +1,15 @@
 version: 2
 jobs:
   build:
+    working_directory: ~/repo
+
     docker:
       - image: jozko/docker:pgclient
         environment:
           POSTGRES_PASSWORD: pgpass
           POSTGRES_USER: pguser
           POSTGRES_IMAGE: postgres:9.6.4-alpine
+
     steps:
       - checkout
       - setup_remote_docker
@@ -19,10 +22,11 @@ jobs:
               -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
               -e POSTGRES_USER=$POSTGRES_USER \
               --name db $POSTGRES_IMAGE
+
       - run:
           name: Wait for DB to come up
           command: sleep 10
 
-     - run:
+      - run:
          name: Connect to the DB
          command: psql postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@0.0.0.0/pguser -c select 1;
