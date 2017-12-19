@@ -12,10 +12,10 @@ jobs:
            wget http://pgfoundry.org/frs/download.php/543/dellstore2-normal-1.0.tar.gz && \
            tar xzf dellstore2-normal-1.0.tar.gz
 
-     - persist_to_workspace:
-         root: /root/repo
-         paths:
-           - dellstore2-normal-1.0
+      - persist_to_workspace:
+          root: /root/repo
+          paths:
+            - dellstore2-normal-1.0
 
   dellstore_import:
     working_directory: ~/repo
