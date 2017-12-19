@@ -1,23 +1,62 @@
 version: 2
 jobs:
-  build:
-    working_directory: ~/repo
-
+  dellstore_download:
+    working_directory: /root
     docker:
-      - image: jozko/docker:pgclient
-      - image: postgres:9.6.4-alpine
+      - image: alpine:latest
+    steps:
+      - checkout
+
+      - run:
+          name: Add ca-certificates or workspace upload will fail
+          command: apk --no-cache add ca-certificates
+
+      - run:
+          name: Fetch test Pg database
+          command: | 
+            wget http://pgfoundry.org/frs/download.php/543/dellstore2-normal-1.0.tar.gz && \
+            tar xzf dellstore2-normal-1.0.tar.gz
+
+      - persist_to_workspace:
+          root: /root
+          paths:
+            - dellstore2-normal-1.0
+
+  dellstore_import:
+    working_directory: /root
+    docker:
+      - image: alpine:latest
+      - image: postgres:10-alpine
         environment:
           POSTGRES_PASSWORD: pgpass
           POSTGRES_USER: pguser
-
     steps:
       - checkout
-      - setup_remote_docker
 
       - run:
-         name: wait
-         command: sleep 10
+          name: Add ca-certificates or workspace download will fail
+          command: apk --no-cache add ca-certificates
 
       - run:
-         name: Connect to the DB
-         command: psql postgresql://pguser:pgpass@127.0.0.1/pguser -c select 1;
+          name: Add Pg client
+          command: apk --no-cache add postgresql-client 
+      
+      - attach_workspace:
+          at: /root
+
+      - run:
+          name: Load test DB
+          command: psql postgresql://pguser:pgpass@127.0.0.1/pguser < dellstore2-normal-1.0/dellstore2-normal-1.0.sql
+
+workflows:
+  version: 2
+  dellstore:
+    jobs:
+      - dellstore_download
+      - dellstore_import:
+          requires:
+            - dellstore_download
+          filters:
+            branches:
+              only:
+                - workspaces 
