@@ -56,3 +56,7 @@ workflows:
       - dellstore_import:
           requires:
             - dellstore_download
+          filters:
+            branches:
+              only:
+                - workspaces 
