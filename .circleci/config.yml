@@ -41,5 +41,5 @@ workflows:
     jobs:
       - dellstore_download
       - dellstore_import:
-        - requires:
+        requires:
           - dellstore_download
