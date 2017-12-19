@@ -37,7 +37,7 @@ jobs:
           command: apk --no-cache add ca-certificates
       
       - attach_workspace:
-        - at: /root
+          at: /root
 
       - run:
           name: Load test DB
