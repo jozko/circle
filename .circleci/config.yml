@@ -1,7 +1,7 @@
 version: 2
 jobs:
   dellstore_download:
-    working_directory: ~/repo
+    working_directory: /root
     docker:
       - image: alpine:latest
     steps:
@@ -13,12 +13,12 @@ jobs:
            tar xzf dellstore2-normal-1.0.tar.gz
 
       - persist_to_workspace:
-          root: /root/repo
+          root: /root
           paths:
             - dellstore2-normal-1.0
 
   dellstore_import:
-    working_directory: ~/repo
+    working_directory: /root
     docker:
       - image: postgres:9.6.4-alpine
         environment:
@@ -27,11 +27,11 @@ jobs:
     steps:
       
       - attach_workspace:
-        - at: /root/repo
+        - at: /root
 
       - run:
-         name: Load test DB
-         command: psql postgresql://pguser:pgpass@127.0.0.1/pguser < dellstore2-normal-1.0/dellstore2-normal-1.0.sql
+          name: Load test DB
+          command: psql postgresql://pguser:pgpass@127.0.0.1/pguser < dellstore2-normal-1.0/dellstore2-normal-1.0.sql
 
 workflows:
   version: 2
