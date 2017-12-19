@@ -1,23 +1,43 @@
 version: 2
 jobs:
-  build:
+  dellstore_download:
     working_directory: ~/repo
-
     docker:
-      - image: jozko/docker:pgclient
+      - image: alpine:latest
+    steps:
+
+      - run:
+         name: Fetch test Pg database
+         command: | 
+           wget http://pgfoundry.org/frs/download.php/543/dellstore2-normal-1.0.tar.gz && \
+           tar xzf dellstore2-normal-1.0.tar.gz
+
+     - persist_to_workspace:
+         root: /root/repo
+         paths:
+           - dellstore2-normal-1.0
+
+  dellstore_import:
+    working_directory: ~/repo
+    docker:
       - image: postgres:9.6.4-alpine
         environment:
           POSTGRES_PASSWORD: pgpass
           POSTGRES_USER: pguser
-
     steps:
-      - checkout
-      - setup_remote_docker
+      
+      - attach_workspace:
+        - at: /root/repo
 
       - run:
-         name: wait
-         command: sleep 10
+         name: Load test DB
+         command: psql postgresql://pguser:pgpass@127.0.0.1/pguser < dellstore2-normal-1.0/dellstore2-normal-1.0.sql
 
-      - run:
-         name: Connect to the DB
-         command: psql postgresql://pguser:pgpass@127.0.0.1/pguser -c select 1;
+workflows:
+  version: 2
+  dellstore:
+    jobs:
+      - dellstore_download
+      - dellstore_import:
+        - requires:
+          - dellstore_download
