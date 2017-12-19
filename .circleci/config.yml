@@ -8,6 +8,10 @@ jobs:
       - checkout
 
       - run:
+        name: apk add ca-certificates or workspace upload will fail
+        command: apk --no-cache add ca-certificates
+
+      - run:
          name: Fetch test Pg database
          command: | 
            wget http://pgfoundry.org/frs/download.php/543/dellstore2-normal-1.0.tar.gz && \
@@ -27,6 +31,10 @@ jobs:
           POSTGRES_USER: pguser
     steps:
       - checkout
+
+      - run:
+        name: apk add ca-certificates or workspace download will fail
+        command: apk --no-cache add ca-certificates
       
       - attach_workspace:
         - at: /root
