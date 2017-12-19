@@ -8,8 +8,8 @@ jobs:
       - checkout
 
       - run:
-        name: apk add ca-certificates or workspace upload will fail
-        command: apk --no-cache add ca-certificates
+          name: Add ca-certificates or workspace upload will fail
+          command: apk --no-cache add ca-certificates
 
       - run:
          name: Fetch test Pg database
@@ -33,8 +33,8 @@ jobs:
       - checkout
 
       - run:
-        name: apk add ca-certificates or workspace download will fail
-        command: apk --no-cache add ca-certificates
+          name: Add ca-certificates or workspace download will fail
+          command: apk --no-cache add ca-certificates
       
       - attach_workspace:
         - at: /root
