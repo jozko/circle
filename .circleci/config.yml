@@ -25,6 +25,7 @@ jobs:
   dellstore_import:
     working_directory: /root
     docker:
+      - image: alpine:latest
       - image: postgres:9.6.4-alpine
         environment:
           POSTGRES_PASSWORD: pgpass
