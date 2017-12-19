@@ -5,6 +5,7 @@ jobs:
     docker:
       - image: alpine:latest
     steps:
+      - checkout
 
       - run:
          name: Fetch test Pg database
@@ -25,6 +26,7 @@ jobs:
           POSTGRES_PASSWORD: pgpass
           POSTGRES_USER: pguser
     steps:
+      - checkout
       
       - attach_workspace:
         - at: /root
